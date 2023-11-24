@@ -1,76 +1,61 @@
+import java.io.*;
 import java.util.*;
+	
+public class Main {
+//	static int[] dx=new int[] {1,-1,0,0};
+//	static int[] dy=new int[] {0,0,1,-1};
+	static StringBuilder ssb=new StringBuilder();
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+//    	Scanner sc = new Scanner(System.in);
+//    	StringTokenizer st=new StringTokenizer(br.readLine());
+//    	int n = Integer.parseInt(st.nextToken());
+//    	int n = Integer.parseInt(br.readLine());
 
-class Main
-{
-	static int[][] rel;
-	static int user = 0;
-	static int r = 0;
-	static int impossible = 9;	//친구가 아닌 관계는 9로 초기화 해줘야한다. 0으로 되어있으면 플로이드-와샬이 작동이 될 수 없는 구조였다.
-
-	public static void main (String[] args)
-	{
-		Scanner sc = new Scanner(System.in);
-		user = sc.nextInt();	//유저 수
-		r = sc.nextInt();	//관계 수
-		rel = new int[user+1][user+1];
-		ArrayList<Integer> bacon = new ArrayList<>();
-		for(int i = 0 ; i < r ; i++)
-		{
-			int a = sc.nextInt();
-			int b = sc.nextInt();
-			rel[a][b] = 1;
-			rel[b][a] = 1;	//쌍방향 친구
-		}//완벽 배치 성공
-		for(int x = 1 ; x < rel.length ; x++)
-		{
-			for(int y = 1 ; y < rel[x].length ; y++)
-			{
-				if(rel[x][y] != 1)
-				{
-					rel[x][y] = impossible;
-				}
+			ArrayList<HashSet<Integer>> al = new ArrayList<>();
+			StringTokenizer st=new StringTokenizer(br.readLine());
+			int N = Integer.parseInt(st.nextToken());
+			while(N-->0) {
+				al.add(new HashSet<>());
+			}			
+			int M = Integer.parseInt(st.nextToken());
+			while(M-->0) {
+				String[] s = br.readLine().split(" ");
+				int f1 = Integer.parseInt(s[0])-1;
+				int f2 = Integer.parseInt(s[1])-1;
+				al.get(f1).add(f2);
+				al.get(f2).add(f1);
 			}
-		}
-		floydWarshall();
-		for(int x = 1 ; x < rel.length ; x++)
-		{
-			int tmp = 0;
-			for(int y = 1 ; y < rel[x].length ; y++)
-			{
-				if(rel[x][y] != 9)
-				{
-					tmp += rel[x][y];
-				}
-			}
-			bacon.add(tmp);	//각각의 베이컨 값이 저장 되어있다.
-		}
-		int min = Collections.min(bacon);
-		for(int i = 0 ; i < bacon.size() ; i++)
-		{
-			if(min == bacon.get(i))
-			{
-				System.out.println(i+1);
-				break;
-			}
-		}
-	}
-	static void floydWarshall()
-	{
-		for(int k = 1 ; k <= user ; k++)
-		{
-			for(int j = 1 ; j <= user ; j++)
-			{
-				for(int i = 1 ; i <= user ; i++)
-				{
-					if(i != j)	//자기 자신 친구 제외
-					{
-						if(rel[i][k] + rel[k][j] < rel[i][j])	//현 값보다 더 작은 값을 발견 시
-						{
-							rel[i][j] = rel[i][k] + rel[k][j];
-						}	
+			int min = Integer.MAX_VALUE;
+			for(int i=0; i<al.size();i++) {
+				ArrayDeque<Integer> q = new ArrayDeque<>();
+				boolean[] visited = new boolean[al.size()];
+				int[] kb = new int[al.size()]; 
+				q.push(i);
+				visited[i]=true;
+				kb[i]=0;
+				int count = 0;
+				while(!q.isEmpty()){
+					int now = q.poll();
+					count+=kb[now];
+					for(Integer friend : al.get(now)) {
+						if(visited[friend])continue;
+						q.offer(friend);
+						visited[friend]=true;
+						kb[friend]=kb[now]+1;
 					}
 				}
+				if(count<min) {
+					min = Math.min(min, count);
+					ssb.setLength(0);
+					ssb.append(i+1);
+				}
 			}
-		}
-	}
+		
+		bw.write(ssb.toString());
+        bw.flush();
+        bw.close();
+        br.close();
+	}  
 }
