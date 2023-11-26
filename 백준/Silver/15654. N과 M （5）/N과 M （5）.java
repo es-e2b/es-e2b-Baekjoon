@@ -41,6 +41,6 @@ public class Main {
 			}
 		}
 		else
-			System.out.println(ans);
+			ssb.append(ans+'\n');
 	}
 }
