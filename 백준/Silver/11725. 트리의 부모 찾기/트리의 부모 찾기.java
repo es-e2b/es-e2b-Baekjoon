@@ -12,7 +12,7 @@ public class Main {
 		boolean[] visited=new boolean[n+1];
 		ArrayList<Integer>[] al = new ArrayList[n+1];
 		for(int i=1;i<=n;i++) {
-			al[i]=new ArrayList<>();
+			al[i]=new ArrayList<Integer>();
 		}
 		for(int i=1;i<n;i++) {
 			st=new StringTokenizer(br.readLine());
