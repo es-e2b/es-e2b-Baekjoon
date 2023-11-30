@@ -6,18 +6,17 @@ public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 	static StringBuilder sb=new StringBuilder();
-	public static void main(String[] args) throws IOException {
-		int n = Integer.parseInt(br.readLine());
-		int m = Integer.parseInt(br.readLine());
-		int[][] tri=new int[n][];
+	public static void main(String[] args) throws Exception {
+		int n = read();
+		int m = read();
+		int[][] tri=new int[n][n];
 		tri[0]=new int[1];
 		tri[0][0]=m;
 		int max=0;
 		for(int i=1;i<n;i++) {
-			st=new StringTokenizer(br.readLine());
 			tri[i]=new int[i+1];
 			for(int j=0;j<=i;j++) {
-				int tmp = Integer.parseInt(st.nextToken());
+				int tmp = read();
 				if(j==0)
 					tri[i][j]=tri[i-1][j]+tmp;
 				if(j>0&&j<i)
@@ -33,5 +32,12 @@ public class Main {
         bw.flush();
         bw.close();
         br.close();
+	}
+	private static int read() throws Exception
+    {
+	    int c, n = System.in.read() & 15;
+	    while ((c = System.in.read()) > 32)
+	    	n = (n << 3) + (n << 1) + (c & 15);
+	    return n;
 	}
 }
