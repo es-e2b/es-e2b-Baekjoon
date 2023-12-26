@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 public class Main {
 
     static int n;
@@ -28,9 +26,15 @@ public class Main {
         return false;
     }
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        n = scanner.nextInt();
+    private static int read() throws Exception{
+	    int c, n = System.in.read() & 15;
+	    while ((c = System.in.read()) > 32)
+	    	n = (n << 3) + (n << 1) + (c & 15);
+	    return n;
+	}
+    
+    public static void main(String[] args) throws Exception {
+        n = read();
         if (n < 1) return;
 
         int[] q = new int[n];
@@ -40,7 +44,7 @@ public class Main {
         step = new int[n + 1];
 
         for (int j = 0; j <= n; ++j) {
-            int i = scanner.nextInt();
+            int i = read();
             q[j] = i;
             if (i != 0) {
                 ans[j] = 1L << (i - 1);
