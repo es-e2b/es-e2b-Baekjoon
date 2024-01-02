@@ -13,7 +13,6 @@ public class Main {
     }
     public static void main(String[] args) throws Exception {
     	N=read(); M=read();
-    	ArrayDeque<Node> q=new ArrayDeque<>();
     	if(N==M)
     		sb.append(0+"\n"+N);
     	else if(N > M) {
@@ -22,42 +21,40 @@ public class Main {
     			sb.append(i+" ");
     	}
     	else {
-    	q.add(new Node(N,0, String.valueOf(N)));
-    	int[] time=new int[200000];
-    	Arrays.fill(time, Integer.MAX_VALUE);
-    	time[N]=0;
-    	while(!q.isEmpty()) {
-    		Node node=q.poll();
-    		int idx=node.idx;
-    		int sec=node.time;
-    		String s=node.s;
-    		if(idx==M&&sec<=time[M]) {
-    			sb.append(sec+"\n").append(s);
-    			break;
-    		}
-    		int[] n=new int[3];
-    		n[0]=idx*2;
-    		n[1]=idx+1;
-    		n[2]=idx-1;
-    		for(int i=0;i<3;i++) {
-    			if(n[i]<0||n[i]>=200000||sec>=time[M]||time[n[i]]<=sec)continue;
-    			q.add(new Node(n[i], sec+1,s+" "+String.valueOf(n[i])));
-    			time[n[i]]=sec+1;
-    		}
-    	}
+    		ArrayDeque<Integer> q=new ArrayDeque<>();
+	    	q.add(N);
+	    	int[] time=new int[200000];
+	    	int[] arr=new int[200000];
+	    	Arrays.fill(time, Integer.MAX_VALUE);
+	    	time[N]=0;
+	    	arr[N]=-1;
+	    	while(!q.isEmpty()) {
+	    		int now=q.poll();
+	    		if(now==M) {
+	    			break;
+	    		}
+	    		int[] n=new int[3];
+	    		n[0]=now*2;
+	    		n[1]=now+1;
+	    		n[2]=now-1;
+	    		for(int i=0;i<3;i++) {
+	    			if(n[i]<0||n[i]>=200000||time[n[i]]<=now)continue;
+	    			q.add(n[i]);
+	    			time[n[i]]=time[now]+1;
+	    			arr[n[i]]=now;
+	    		}
+	    	}
+	    	sb.append(time[M]+"\n");
+	    	q.clear();
+	    	for(int i=M;i!=-1;i=arr[i]) {
+	    		q.push(i);
+	    	}
+	    	while(!q.isEmpty()) {
+	    		sb.append(q.poll()+" ");
+	    	}
     	}
         bw.append(sb);
         bw.flush();
         bw.close();
-    }
-    static class Node{
-    	int idx;
-    	int time;
-    	String s;
-    	public Node(int idx, int time, String s) {
-    		this.idx=idx;
-    		this.time=time;
-    		this.s=s;
-    	}
     }
 }
