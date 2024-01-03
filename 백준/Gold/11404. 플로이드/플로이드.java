@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+    static final int INF = 987654321;
 	static int N,M;
 	static int[][] cost;
     static StringBuilder sb = new StringBuilder();
@@ -15,31 +16,27 @@ public class Main {
     public static void main(String[] args) throws Exception {
     	N=read(); M=read();
     	cost=new int[N+1][N+1];
+    	for(int i=1;i<=N;i++) {
+    		Arrays.fill(cost[i], INF);
+    		cost[i][i]=0;
+    	}
     	for(int i=0;i<M;i++) {
     		int start=read();
     		int end=read();
     		int weight=read();
-    		if(cost[start][end]>0)
-    			cost[start][end]=Math.min(weight,cost[start][end]);
-    		else
-    			cost[start][end]=weight;
+    		cost[start][end]=Math.min(weight,cost[start][end]);
     	}
-    	ArrayDeque<int[]> q=new ArrayDeque<>();
-    	for(int i=1;i<=N;i++) {
-    		q.add(new int[] {i,0});
-    		while(!q.isEmpty()) {
-    			int[] now=q.poll();
-    			if(cost[i][now[0]]<=0||now[1]<cost[i][now[0]])
-    				cost[i][now[0]]=now[1];
-    			for(int k=1;k<=N;k++) {
-    				int newCost=now[1]+cost[now[0]][k];
-    				if(now[0]==k||k==i||cost[now[0]][k]<=0||cost[i][k]>0&&cost[i][k]<newCost)continue;
-    				q.offer(new int[] {k,newCost});
+    	for(int k=1;k<=N;k++) {
+    		for(int i=1;i<=N;i++)
+    			for(int j=1;j<=N;j++) {
+    				if(cost[i][j]>cost[i][k]+cost[k][j])
+    					cost[i][j]=cost[i][k]+cost[k][j];
     			}
-    		}
     	}
     	for(int i=1;i<=N;i++) {
     		for(int j=1;j<=N;j++) {
+    			if(cost[i][j]>=INF)
+    				cost[i][j]=0;
     			sb.append(cost[i][j]+" ");
     		}
     		sb.append("\n");
