@@ -29,8 +29,7 @@ public class Main {
     	for(int k=1;k<=N;k++) {
     		for(int i=1;i<=N;i++)
     			for(int j=1;j<=N;j++) {
-    				if(cost[i][j]>cost[i][k]+cost[k][j])
-    					cost[i][j]=cost[i][k]+cost[k][j];
+    				cost[i][j]=Math.min(cost[i][k]+cost[k][j],cost[i][j]);
     			}
     	}
     	for(int i=1;i<=N;i++) {
