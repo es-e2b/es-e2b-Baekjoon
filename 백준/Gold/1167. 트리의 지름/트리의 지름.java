@@ -2,7 +2,6 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringBuilder sb = new StringBuilder();
     static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
     private static int read() throws Exception {
@@ -11,20 +10,28 @@ public class Main {
             n = (n << 3) + (n << 1) + (c & 15);
         return n;
     }
+	static public int readInt() throws Exception {
+		int c, n = System.in.read() & 15;
+		boolean isNegative = n == 13;
+		if (isNegative) n = System.in.read() & 15;
+		while ((c = System.in.read()) > 32) n = (n << 3) + (n << 1) + (c & 15);
+		if (c == 13) System.in.read();
+		return isNegative ? ~n + 1 : n;
+	}
     public static void main(String[] args) throws Exception {
+    	Scanner sc=new Scanner(System.in);
     	int V=read();
     	ArrayList<ArrayList<int[]>> al=new ArrayList<>();
     	HashSet<Integer> leaf=new HashSet<>();
     	for(int i=0;i<=V;i++)
     		al.add(new ArrayList<>());
     	for(int i=1;i<=V;i++) {
-    		StringTokenizer st=new StringTokenizer(br.readLine());
-    		int n=Integer.parseInt(st.nextToken());
+    		int n=read();
     		ArrayList<int[]> v=al.get(n);
     		while(true){
-    			int next=Integer.parseInt(st.nextToken());
-    			if(next<0)break;
-    			v.add(new int[] {next,Integer.parseInt(st.nextToken())});
+    			int next=readInt();
+    			if(next==-1)break;
+    			v.add(new int[] {next,read()});
     		}
     		if(v.size()==1) {
     			leaf.add(n);
