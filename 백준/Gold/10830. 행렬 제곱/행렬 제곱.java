@@ -1,19 +1,25 @@
 import java.util.*;
+import java.io.*;
 
 public class Main {
     static int N;
     static long B;
     static int[][] arr;
+    static StringTokenizer st;
     static StringBuilder sb = new StringBuilder();
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
     public static void main(String[] args) throws Exception {
-    	Scanner sc=new Scanner(System.in);
-        N=sc.nextInt();
-        B=sc.nextLong();
+    	st=new StringTokenizer(br.readLine());
+        N=Integer.parseInt(st.nextToken());
+        B=Long.parseLong(st.nextToken());
         arr=new int[N][N];
 
-        for (int i=0;i<N;i++)
+        for (int i=0;i<N;i++) {
+        	st=new StringTokenizer(br.readLine());
             for (int j=0;j<N;j++)
-                arr[i][j]=sc.nextInt();
+                arr[i][j]=Integer.parseInt(st.nextToken());
+        }
 
         int[][] ans=devide(B);
 
@@ -23,7 +29,10 @@ public class Main {
             sb.append("\n");
         }
 
-        System.out.print(sb);
+        bw.append(sb);
+        bw.flush();
+        bw.close();
+        br.close();
     }
     static int[][] devide(long b) {
         if (b==1) {
