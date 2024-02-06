@@ -38,6 +38,7 @@ public static class Program
             }
             if(parent1==parent2)continue;
             pre[parent2]=parent1;
+            pre[now.v2]=parent1;
             sum+=now.c;
             count++;
         }
