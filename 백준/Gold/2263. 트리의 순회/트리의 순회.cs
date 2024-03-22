@@ -4,6 +4,7 @@ public static class Program
 {
     static int[] Inorder;
     static int[] Postorder;
+    static int[] IdxRoot;
     static StreamReader sr=new StreamReader(Console.OpenStandardInput(), bufferSize: 65536);
     static StreamWriter sw=new StreamWriter(Console.OpenStandardOutput(), bufferSize: 65536);
     static StringBuilder sb=new StringBuilder();
@@ -14,45 +15,25 @@ public static class Program
         int len=ReadInt();
         Inorder=ReadIntArray();
         Postorder=ReadIntArray();
-        Tree whole=new Tree((0, len-1), (0, len-1));
-        whole.printPreorder();
+        IdxRoot=new int[100001];
+        for(int i=0;i<len;i++)
+        {
+            IdxRoot[Inorder[i]]=i;
+        }
+        printAns((0, len-1), (0, len-1));
         sw.WriteLine(sb);
         sw.Flush();
     }
-    public class Tree
+    public static void printAns((int startIdx, int endIdx) inorder, (int startIdx, int endIdx) postorder)
     {
-        private (int startIdx, int endIdx) _inorder;
-        private (int startIdx, int endIdx) _postorder;
-        private int _root;
-        private Tree _left;
-        private Tree _right;
-        public Tree((int startIdx, int endIdx) inorder, (int startIdx, int endIdx) postorder)
-        {
-            _inorder=inorder;
-            _postorder=postorder;
-            _root=Postorder[postorder.endIdx];
-            int idx=Array.IndexOf(Inorder,_root);
-            int len=idx-inorder.startIdx;
-            if(idx>inorder.startIdx)
-            {
-                _left=new Tree((inorder.startIdx, idx-1), (postorder.startIdx, postorder.startIdx+len-1));
-            }
-            if(postorder.startIdx+len<postorder.endIdx)
-            {
-                _right=new Tree((idx+1,inorder.endIdx),(postorder.startIdx+len,postorder.endIdx-1));
-            }
-        }
-        public void printPreorder()
-        {
-            sb.Append(_root+" ");
-            if(_left!=null)
-            {
-                _left.printPreorder();
-            }
-            if(_right!=null)
-            {
-                _right.printPreorder();
-            }
-        }
+        if(inorder.endIdx<inorder.startIdx&&postorder.endIdx<postorder.startIdx)
+            return;
+        int root=Postorder[postorder.endIdx];
+        int idx=IdxRoot[root];
+        int lenLeft=idx-inorder.startIdx;
+        int lenRight=inorder.endIdx-idx;
+        sb.Append(root+" ");
+        printAns((inorder.startIdx,inorder.startIdx+lenLeft-1), (postorder.startIdx, postorder.startIdx+lenLeft-1));
+        printAns((inorder.endIdx-lenRight+1, inorder.endIdx), (postorder.endIdx-lenRight, postorder.endIdx-1));
     }
 }
