@@ -16,31 +16,32 @@ public static class Program
         int pointerLeft=0;
         int pointerRight=N-1;
         int ans=2_000_000_000;
+        int left=0;
+        int right=0;
         for(;pointerLeft<pointerRight;)
         {
             int sum=arr[pointerLeft]+arr[pointerRight];
-            if(Math.Abs(sum)<ans)
+            int abs=Math.Abs(sum);
+            if(abs<ans)
             {
-                ans=Math.Abs(sum);
-                sb.Clear();
-                sb.Append(arr[pointerLeft]+" "+arr[pointerRight]);
+                left=arr[pointerLeft];
+                right=arr[pointerRight];
+                ans=abs;
             }
             if(sum==0)
             {
-                sb.Clear();
-                sb.Append(arr[pointerLeft]+" "+arr[pointerRight]);
                 break;
             }
             if(sum<0)
             {
                 pointerLeft++;
-                continue;
             }
             else
             {
                 pointerRight--;
             }
         }
+        sb.Append(left+" "+right);
         sw.WriteLine(sb);
         sw.Flush();
     }
