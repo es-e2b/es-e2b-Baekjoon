@@ -2,48 +2,66 @@
 using System.Text;
 public static class Program
 {
-    static int N,M;
-    static int[] pre;
-    static StreamReader sr=new StreamReader(Console.OpenStandardInput(), bufferSize: 65536);
-    static StreamWriter sw=new StreamWriter(Console.OpenStandardOutput(), bufferSize: 65536);
-    static StringBuilder sb=new StringBuilder();
+    static StreamReader sr = new StreamReader(Console.OpenStandardInput(), bufferSize: 65536);
+    static StreamWriter sw = new StreamWriter(Console.OpenStandardOutput(), bufferSize: 65536);
+    static StringBuilder sb = new StringBuilder();
     public static void Main()
     {
-        var input=sr.ReadLine().Split().Select(int.Parse).ToArray();
-        N=input[0]; M=input[1];
-        pre=new int[N+1];
-        PriorityQueue<(int v1, int v2, int c), int> pq=new PriorityQueue<(int v1, int v2, int c), int>();
-        while(M-->0)
+        int[] array = Array.ConvertAll(sr.ReadLine().Split(), int.Parse);
+        int V = array[0];
+        int E = array[1];
+        var edges = new List<(int u, int v, int w)>(E);
+        for (int i = 0; i < E; i++)
         {
-            var abc=sr.ReadLine().Split().Select(int.Parse).ToArray();
-            pq.Enqueue((abc[0], abc[1], abc[2]), abc[2]);
+            var input = Array.ConvertAll(sr.ReadLine().Split(), int.Parse);
+            edges.Add((input[0], input[1], input[2]));
         }
-        (int v1, int v2, int c) start=pq.Dequeue();
-        pre[start.v2]=start.v1;
-        int count=0;
-        int sum=0;
-        sum+=start.c;
-        while(pq.Count>0&&count<N)
+        edges.Sort((a, b) => a.w.CompareTo(b.w));
+
+        int[] parent = new int[V + 1];
+        int[] rank = new int[V + 1];
+        for (int i = 1; i <= V; i++)
+            parent[i] = i;
+
+        int Find(int x)
         {
-            (int v1, int v2, int c) now=pq.Dequeue();
-            int parent1=now.v1;
-            while(pre[parent1]!=0)
-            {
-                parent1=pre[parent1];
-            }
-            int parent2=now.v2;
-            while(pre[parent2]!=0)
-            {
-                parent2=pre[parent2];
-            }
-            if(parent1==parent2)continue;
-            pre[parent2]=parent1;
-            pre[now.v2]=parent1;
-            sum+=now.c;
-            count++;
+            if (parent[x] != x)
+                parent[x] = Find(parent[x]);
+            return parent[x];
         }
-        sb.Append(sum);
-        sw.WriteLine(sb);
+
+        bool Union(int a, int b)
+        {
+            a = Find(a);
+            b = Find(b);
+            if (a == b) return false;
+            if (rank[a] < rank[b])
+                parent[a] = b;
+            else if (rank[a] > rank[b])
+                parent[b] = a;
+            else
+            {
+                parent[b] = a;
+                rank[a]++;
+            }
+            return true;
+        }
+
+        long answer = 0;
+        int edgeCount = 0;
+        foreach (var e in edges)
+        {
+            if (Union(e.u, e.v))
+            {
+                answer += e.w;
+                edgeCount++;
+                if (edgeCount == V - 1) break;
+            }
+        }
+
+        sb.Append(answer);
+        
+        sw.Write(sb);
         sw.Flush();
     }
 }
